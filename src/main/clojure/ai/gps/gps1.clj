@@ -37,7 +37,7 @@
 (defn apply-op [op]
   "Print a message and update *state* if op is applicable."
   (when (every? achieved? (:preconds op))
-    (prn [:executing (:action op)])
+    (prn (list ':executing (:action op)))
     (set! *state* (set/difference *state* (:del-list op)))
     (set! *state* (set/union *state* (:add-list op)))))
 
