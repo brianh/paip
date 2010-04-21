@@ -3,7 +3,7 @@
 ;;;; This is as close a port as possible (other than using sets).
 ;;;;
 
-(ns ai.gps
+(ns ai.gps.gps1
   (:require [clojure.set :as set]))
 
 (comment
