@@ -28,15 +28,19 @@
   (or (contains? *state* goal)
       (some apply-op (filter (appropriate? goal) *ops*))))
 
+(defn achieved-all? [goals]
+  "Try to achieve each goal, then make sure they still hold."
+  (and (every? achieved? goals) (every? identity (map *state* goals))))
+
 (defn GPS [state goals ops]
   "General problem solver: achieve all goals using 'ops'."
   (binding [*state* state
 	    *ops* ops]
-    (if (every? achieved? goals) :solved)))
+    (if (achieved-all? goals) :solved)))
 
 (defn apply-op [op]
   "Print a message and update *state* if op is applicable."
-  (when (every? achieved? (:preconds op))
+  (when (achieved-all? (:preconds op))
     (prn (list ':executing (:action op)))
     (set! *state* (set/difference *state* (:del-list op)))
     (set! *state* (set/union *state* (:add-list op)))))
@@ -52,4 +56,5 @@
 (comment
   (GPS #{:son-at-home :car-works} #{:son-at-school} *school-ops*)
   (GPS #{:son-at-home :car-needs-battery :have-money :have-phone-book} #{:son-at-school} *school-ops*)
+  (GPS #{:son-at-home :car-needs-battery :have-money :have-phone-book} #{:have-money :son-at-school} *school-ops*)
 )
